@@ -1,4 +1,4 @@
-# Project: Biblioteca Estandar de Grafos.
+# Project: Biblioteca Estandar de Grafos. Diogenes Cristaldo
 
 LD		=g++
 LDFLAGS		=-m64 -ggdb -fPIC
