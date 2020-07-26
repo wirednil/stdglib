@@ -93,7 +93,7 @@ bool stdgraph::Grafo::SonAdyacentes(IRG::VertexId verticeOrigen, IRG::VertexId v
     return vOrigen ? Contiene(vOrigen, verticeAdyacente) : false;
 }
 
-int stdgraph::Grafo::ObtenerCantidadVertices(const Grafo* grafo){
+int stdgraph::Grafo::ObtenerCantidadVertices(){
     return cantidadVertices;
 }
 

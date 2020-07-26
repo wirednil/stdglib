@@ -1,6 +1,6 @@
 # Project: Biblioteca Estandar de Grafos. Diogenes Cristaldo
 
-LD		=g++
+LD			=g++
 LDFLAGS		=-m64 -ggdb -fPIC
 
 HOME_LIB 	= $(pwd)
