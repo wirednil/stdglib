@@ -102,13 +102,13 @@ namespace stdgraph
 		IRG::Status Conectar(IRG::VertexId verticeOrigen, IRG::VertexId verticeDestino);
 		
 		/**
-		 * @return true si @verticeOrigen es adyacente a @verticeDestino.
+		 * @return true si verticeOrigen es adyacente a verticeDestino.
 		 * Caso contrario devuelve false
 		 */
 		bool SonAdyacentes(IRG::VertexId verticeOrigen, IRG::VertexId verticeAdyacente);
 
 		/**
-		 * @return Devuelve la cantidad de vertices de @grafo
+		 * @return Devuelve la cantidad de vertices de grafo
 		 */
 		int ObtenerCantidadVertices();
 
