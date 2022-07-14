@@ -1,6 +1,7 @@
 #ifndef _GRAFO_H_
 #define _GRAFO_H_
 
+#include <string>
 #include "toha.h"
 
 /**
@@ -18,10 +19,10 @@ namespace stdgraph {
   class Grafo
   {
   private:
-    char* nombre;
-    char* identificadorUnico;
+    std::string* nombre;
+    std::string* identificadorUnico;
     int   cantidadVertices;
-    char* etiqueta;
+    std::string* etiqueta;
     IRG::TipoGrafo tipo;
     IRG::Vertices vertices;
 
@@ -31,24 +32,24 @@ namespace stdgraph {
     bool EsNoDirigido(){ return tipo == IRG::NoDirigido; }
 
   public:
-    Grafo(char* nombre, IRG::TipoGrafo tipo);
+    Grafo(std::string* nombre, IRG::TipoGrafo tipo);
     ~Grafo();
 
     /**
      ** @brief Se define al grafo como Dirigido
      ** 
-     ** @param nombre Es un tipo de dato puntero a char, con el cual se define el nombre del
+     ** @param nombre Es un tipo de dato puntero a string, con el cual se define el nombre del
      ** grafo actual.
      **/
-    void CrearGrafoDirigido(char* nombre);
+    void CrearGrafoDirigido(std::string* nombre);
 
     /**
      ** @brief Se define al grafo como NoDirigido
      ** 
-     ** @param nombre Es un tipo de dato puntero a char, con el cual se define el nombre del
+     ** @param nombre Es un tipo de dato puntero a string, con el cual se define el nombre del
      ** grafo actual.
      **/
-    void CrearGrafoNoDirigido(char* nombre);
+    void CrearGrafoNoDirigido(std::string* nombre);
 
     /**
      ** @brief Se agrega Nodo como vertice del grafo
@@ -70,19 +71,19 @@ namespace stdgraph {
     /**
      ** @return nombre del grafo. 
      **/
-    char* ObtenerNombre();
+    std::string* ObtenerNombre();
     
     /**
      ** @brief se asigna un nombre al grafo. Si ya tenía un nombre definido, se sobreescribe.
      ** 
-     ** @param nombre tipo de dato puntero a char válido.
+     ** @param nombre tipo de dato puntero a string válido.
      **/
-    void EstablecerNombre(char* nombre);
+    void EstablecerNombre(std::string* nombre);
     
     /** 
      ** @return identificador unico global
      **/
-    char* ObtenerIdentificador();
+    std::string* ObtenerIdentificador();
     
     /**
      ** @brief Si es un grafo NoDirigido, se agrega una relacion de adyacencia conmutativa entre
@@ -141,7 +142,7 @@ namespace stdgraph {
      ** Postcondiciones: Devuelve los vertices en un registro en formato CSV donde cada campo es un vertice.
      ** Si los vertices tienen etiquetas devuelve las etiquetas en lugar del numero de vertice.
      **/
-    char* ObtenerVertices();
+    std::string* ObtenerVertices();
 
     /**
      ** Precondiciones: @grafo es una instancia valida creada con alguna de las primitivas creacionales
@@ -155,7 +156,7 @@ namespace stdgraph {
      ** Para el caso de los grafos no dirigidos no hay que duplicar las relaciones conmutativas.
      ** Si los vertices tienen etiquetas devuelve las etiquetas en lugar del numero de vertice
      **/
-    char* ObtenerAristas(const Grafo* grafo);
+    std::string* ObtenerAristas(const Grafo* grafo);
 
     int ObtenerAdyacencia(Grafo* grafo, int verticeOrigen, int indiceAdyacencia);
 
@@ -169,7 +170,7 @@ namespace stdgraph {
      ** Precondiciones: @grafo es una instancia valida creada con alguna de las primitivas creacionales
      ** Postcondiciones: Devuelve la sucesion grafica de @grafo separados por coma
      **/
-    char* ObtenerSucesionGrafica();
+    std::string* ObtenerSucesionGrafica();
     
     /**
      **
@@ -179,12 +180,12 @@ namespace stdgraph {
     /**
      **
      **/
-    char* ObtenerEtiqueta(int vertice);
+    std::string* ObtenerEtiqueta(int vertice);
     
     /**
      **
      **/
-    char* ObtenerEtiquetaOClave(int verticeABuscar);
+    std::string* ObtenerEtiquetaOClave(int verticeABuscar);
 
     /**
      **
@@ -216,14 +217,14 @@ namespace stdgraph {
      ** Si es etiquetado Propio, se asigna la etiqueta parametrizada al vertice actual.  
      ** 
      ** @param etiqueta
-     ** Es un puntero a char válido definido por el programador. Si es un puntero a char vacío,
+     ** Es string puntero válido definido por el programador. Si el string está vacio
      ** se asigna el verticeId como etiqueta actual.
      ** 
      ** @return  
      ** Ok: si el vertice asociado al verticeId actual existe.
      ** Error: Si el vertice asociado al verticeId actual no existe    
      **/
-    IRG::Status AgregarEtiqueta(IRG::VertexId verticeId, IRG::TipoEtiqueta etiquetado, char* etiqueta);
+    IRG::Status AgregarEtiqueta(IRG::VertexId verticeId, IRG::TipoEtiqueta etiquetado, std::string* etiqueta);
 
   }; /*Grafo*/
 }

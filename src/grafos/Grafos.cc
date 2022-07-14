@@ -7,12 +7,12 @@
 
 struct IRG::Vertice{
   IRG::Nodo* nodo;
-  char* etiqueta;
+  std::string etiqueta;
   IRG::VertexId vertexId;
   IRG::Adyacencias adyacencias;
 };
 
-stdgraph::Grafo::Grafo(char* nombre, IRG::TipoGrafo tipo) {
+stdgraph::Grafo::Grafo(std::string * nombre, IRG::TipoGrafo tipo) {
   switch(tipo) {
     case IRG::Dirigido:
       CrearGrafoDirigido(nombre);
@@ -26,13 +26,13 @@ stdgraph::Grafo::Grafo(char* nombre, IRG::TipoGrafo tipo) {
   }
 }
 
-void stdgraph::Grafo::CrearGrafoNoDirigido(char* nombre) {
+void stdgraph::Grafo::CrearGrafoNoDirigido(std::string* nombre) {
   this->nombre = nombre;
   this->tipo = IRG::NoDirigido;
   this->cantidadVertices = 0;
 }
 
-void stdgraph::Grafo::CrearGrafoDirigido(char* nombre) {
+void stdgraph::Grafo::CrearGrafoDirigido(std::string* nombre) {
   this->nombre = nombre;
   this->tipo = IRG::Dirigido;
   this->cantidadVertices = 0;
@@ -53,17 +53,17 @@ IRG::Nodo* stdgraph::Grafo::ObtenerNodo(IRG::VertexId id) {
   return (verticeActual ? verticeActual->nodo : NULL);
 }
 
-char* stdgraph::Grafo::ObtenerNombre() {
+std::string* stdgraph::Grafo::ObtenerNombre() {
   return this->nombre;
 }
 
-void stdgraph::Grafo::EstablecerNombre(char* nombre) {
+void stdgraph::Grafo::EstablecerNombre(std::string* nombre) {
   if (this->nombre==NULL) this->nombre = nombre;
 }
 
-char* stdgraph::Grafo::ObtenerIdentificador() {
-  //ASSERT
-  //return "";
+std::string* stdgraph::Grafo::ObtenerIdentificador() {
+  ASSERT
+  return new std::string("");
 }	
 
 IRG::Status stdgraph::Grafo::Conectar(IRG::VertexId verticeOrigen, IRG::VertexId verticeDestino) {
@@ -99,8 +99,9 @@ int stdgraph::Grafo::ObtenerCantidadVertices() {
 
 //GeneradorGrafos(?)
 stdgraph::Grafo* stdgraph::Grafo::ObtenerGrafoComplementario(const Grafo* grafo) {
-  char* nombre = new char;
-  sprintf(nombre,"Grafo Complementario %s", ObtenerNombre());
+  std::string* nombre = new std::string;
+  nombre->append("Grafo Complementario ");
+  nombre->append(*ObtenerNombre());
   Grafo *grafoComplementario = new Grafo(nombre, ObtenerTipo());
   for (int origen = 0; origen < cantidadVertices; origen++) {
     IRG::Adyacencias adyacencias = vertices[origen]->adyacencias;
@@ -133,22 +134,23 @@ stdgraph::Grafo* stdgraph::Grafo::ObtenerUnion(const Grafo* grafo1, const Grafo*
   ASSERT
 }
 
-char* stdgraph::Grafo::ObtenerVertices() {
-  char* sucesionGrafica = new char;
-  for (int i=0; i<cantidadVertices; ++i)  {
+std::string* stdgraph::Grafo::ObtenerVertices() {
+  std::string* sucesionGrafica = new std::string;
+  for (int i=0; i<cantidadVertices; ++i) {
     IRG::Vertice *verticeActual = ObtenerVertice(this->vertices[i]->vertexId);
     if (verticeActual!=NULL && i==0) {
-      sprintf(sucesionGrafica, "%s",verticeActual->etiqueta);
-    }else{
-      sprintf(sucesionGrafica, "%s,%s",sucesionGrafica,verticeActual->etiqueta);
+      sucesionGrafica->append(verticeActual->etiqueta);
+    } else {
+      sucesionGrafica->append(*sucesionGrafica);
+      sucesionGrafica->append(verticeActual->etiqueta);
     }
   }
   return sucesionGrafica;
 }
 
-char* stdgraph::Grafo::ObtenerAristas(const Grafo* grafo) {
+std::string* stdgraph::Grafo::ObtenerAristas(const Grafo* grafo) {
   ASSERT
-  return "";
+  return new std::string("");
 }
 
 int stdgraph::Grafo::ObtenerAdyacencia(Grafo* grafo, int verticeOrigen, int indiceAdyacencia) {
@@ -160,9 +162,9 @@ void stdgraph::Grafo::DestruirGrafo(Grafo* grafo) {
   ASSERT
 }
 
-char* stdgraph::Grafo::ObtenerSucesionGrafica() {
+std::string* stdgraph::Grafo::ObtenerSucesionGrafica() {
   ASSERT
-  return "";
+  return new std::string("");
 }
 
 bool stdgraph::Grafo::ContieneAdyacencia(int verticeOrigen, int verticeAdyacente) {
@@ -170,14 +172,15 @@ bool stdgraph::Grafo::ContieneAdyacencia(int verticeOrigen, int verticeAdyacente
   return false;
 }
 
-char* stdgraph::Grafo::ObtenerEtiqueta(int vertice) {
+std::string* stdgraph::Grafo::ObtenerEtiqueta(int vertice) {
   ASSERT
-  return "";
+  return new std::string("");
 }
 
-char* stdgraph::Grafo::ObtenerEtiquetaOClave(int verticeABuscar) {
+std::string* stdgraph::Grafo::ObtenerEtiquetaOClave(int verticeABuscar) {
   ASSERT
-  return "";
+  return new std::string("");
+
 }
 
 bool stdgraph::Grafo::ExisteVertice(IRG::VertexId vertice) {
@@ -222,7 +225,7 @@ IRG::Status stdgraph::Grafo::AgregarEtiqueta(IRG::VertexId etiqueta) {
   return IRG::Error;
 }
 
-IRG::Status stdgraph::Grafo::AgregarEtiqueta(IRG::VertexId verticeId, IRG::TipoEtiqueta etiquetado, char* etiqueta) {
+IRG::Status stdgraph::Grafo::AgregarEtiqueta(IRG::VertexId verticeId, IRG::TipoEtiqueta etiquetado, std::string* etiqueta) {
   ASSERT
   return IRG::Error;
 }
