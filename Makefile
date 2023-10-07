@@ -1,22 +1,30 @@
-# Project: Biblioteca Estandar de Grafos. Diogenes Cristaldo
+0=o
+# Application paths
+SRC_DIR		= ./src
+INC_DIR		= ./include
+OBJ_DIR		= ./obj
+LIB			=  /LSRC
+TEST		= ./test
 
-LD		=g++
-LDFLAGS		=-m64 -ggdb -fPIC
+# Module list
+OBJ_LIST	= 	$(OBJ_DIR)/Grafos.$(0)	
 
-HOME_LIB 	= $(pwd)
-INCS		=-I./include -g3 -fpermissive -Wreturn-type
-SRC		=./src
-BIN		=./bin
-OBJS		=./lib
-BINS		=./bin/*
+# Flags Compilers
+CXX			=	g++
+INCLUDES	=	-I$(INC_DIR) -I$(INC_DIR)/grafos -I$(INC_DIR)/industries
+FLAGS		=	-O0 -Wall -Wextra -g
 
-clean: 
-	rm -rf ./bin/*.o
-install: $(BIN)/Grafos.o
-	$(LD) $(LDFLAGS) -Wl,-soname,$(OBJS)/libstdg.so.1 -o $(OBJS)/libstdg.so.1.0 $(BINS) -shared 
 
-$(BIN)/Grafos.o: $(SRC)/grafos/Grafos.cc
-	$(LD) -Wall  $(LDFLAGS) -c $(SRC)/grafos/Grafos.cc -o $(BIN)/Grafos.o $(INCS)
+# Rules to compile testing files
+cmain: 
+	$(CXX) $(FLAGS) $(TEST)/main.cpp  $(INCLUDES) -o main
 
-$(BIN)/toha.o: $(SRC)/toha.cc
-	$(LD) -Wall  $(LDFLAGS) -c $(SRC)/toha.cc -o $(BIN)/toha.o $(INCS)
+# Rule to clean all generated objects and library
+clean:
+	rm -rf obj/*.o $(LIB)/libgraf.* ./main  
+
+# Create symbolic links for libgraf.so.1.0
+.PHONY: links
+links:
+	ln -sf $(LIB)/libgraf.so.1.0 $(LIB)/libgraf.so.1
+	ln -sf $(LIB)/libgraf.so.1   $(LIB)/libgraf.so

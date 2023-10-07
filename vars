@@ -1,0 +1,6 @@
+#!/bin/bash
+mkdir lib
+mkdir obj
+mkdir /LSRC
+export LD_LIBRARY_PATH=/LSRC:$LD_LIBRARY_PAT
+export LSRC=$(pwd)

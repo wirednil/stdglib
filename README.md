@@ -32,8 +32,8 @@ IRG::Nodo* CreateNode(char * firstName, char * lastName, int edad){
 int main(){
 	//It is entered by parameter:
 	//Network name
-	//Network type: Direct (Dirigido) or non-direct (NoDirigido)
-    Grafo* graph = new Grafo("Graph A", Dirigido);
+	//Network type: Direct (DIRECTED_GRAPH) or non-direct (NON_DIRECTED_GRAPH)
+    Grafo* graph = new Grafo("Graph A", DIRECTED_GRAPH);
 	
 	//We use the id for the graph vertex.
 	VertexId id = 1;
