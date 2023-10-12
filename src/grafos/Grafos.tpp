@@ -1,4 +1,3 @@
-
 #pragma once
 #include <iostream>
 #include "Types.h"
@@ -6,69 +5,88 @@
 namespace toha {
 
 template <class T>
-Node<T>* create_new_node(const T& val) {
-  Node<T>* newNode = new Node<T>;
-  if (newNode) {
-    memcpy(&newNode->val, &val, sizeof(val));
+std::string getAdjacentNodeRepresentations(const T& node, std::list<Node<T>*> adjacent) {
+  std::string nodes = "";
+  for (Node<T>* n: adjacent) {
+    nodes += "(";
+    nodes += std::to_string(node);
+    nodes += ", ";
+    nodes += std::to_string(n->val);
+    nodes += ")";
+    if (n != adjacent.back()) nodes += ", ";
   }
-  return newNode;
+  return nodes;
 }
 
-template<class T> 
-Grafo<T>::Grafo(const T& val) 
+template<class T>
+Grafo<T>::Grafo(const T& val)
  { this->add(val); }
 
-template<class T> 
+template<class T>
 Grafo<T>::Grafo(const T& val, const std::string &name, const int &type) :
   name(name), type(type) {
   this->add(val);
 }
 
 
-template<class T> 
+template<class T>
 int Grafo<T>::add(const T& value) {
-    this->vertices.push_back(create_new_node(value));
-    return this->vertices.size() - 1; 
+  this->vertices.push_back(new Node<T>(value));
+  return this->vertices.size() - 1;
 }
 
-template<class T> 
+template<class T>
 void Grafo<T>::showVertices() {
   std::string V = "V = {";
   for (Node<T>* a : vertices) {
     V.append(std::to_string(a->val));
     if (a != vertices.back()) {
       V.append(", ");
-    } 
+    }
   }
   V.append("}");
   std::cout << V << std::endl;
 }
 
-template<class T> 
+template<class T>
+void Grafo<T>::showConnections() {
+  std::string edges = "E = {";
+  for (Node<T>* node : vertices) {
+    std::string adjacentNodes = node->getAdjacentNodeRepresentations();
+    if (!adjacentNodes.empty()) {
+      edges.append(adjacentNodes);
+    }
+    vertices.data
+  }
+  edges.append("}");
+  std::cout << edges << std::endl;
+}
+
+template<class T>
 std::string Grafo<T>::getName() {
   return this->name;
 }
 
-template<class T> 
+template<class T>
 void Grafo<T>::setName(std::string name) {
   if (this->name.empty()) this->name = name;
 }
 
-template<class T> 
+template<class T>
 int Grafo<T>::connect(const T &dest, const T &src) {
   Node<T>* destNode = this->search(dest);
   Node<T>* srcNode  = this->search(src);
   if (destNode && srcNode) {
-    srcNode->connect(destNode);
+    destNode->connect(srcNode);
     if (type == NON_DIRECTED_GRAPH) {
-      destNode->connect(srcNode);
+      srcNode->connect(destNode);
     }
     return toha::Ok;
   }
   return toha::Error;
 }
 
-template <typename T>
+template <class T>
 Node<T>* Grafo<T>::search(const T& val) {
   for (Node<T>* node : this->vertices) {
     if (node->getValue() == val) return node;
@@ -82,13 +100,13 @@ IRG::Nodo* Grafo<T>::ObtenerNodo(IRG::VertexId id) {
   IRG::Vertice* verticeActual = ObtenerVertice(id);
   return (verticeActual ? verticeActual->nodo : NULL);
 }
-template<class T> 
+template<class T>
 std::string Grafo<T>::ObtenerIdentificador() {
   ASSERT
   return std::string("");
-}	
+}
 
-template<class T> 
+template<class T>
 IRG::Status Grafo<T>::Conectar(IRG::VertexId verticeOrigen, IRG::VertexId verticeDestino) {
   IRG::Vertice* vOrigen  = ObtenerVertice(verticeOrigen);
   IRG::Vertice* vDestino = ObtenerVertice(verticeDestino);
@@ -111,19 +129,19 @@ IRG::Status Grafo<T>::Conectar(IRG::VertexId verticeOrigen, IRG::VertexId vertic
   }
 }
 
-template<class T> 
+template<class T>
 bool Grafo<T>::SonAdyacentes(IRG::VertexId verticeOrigen, IRG::VertexId verticeAdyacente) {
   IRG::Vertice* vOrigen = ObtenerVertice(verticeOrigen);
   return vOrigen ? Contiene(vOrigen, verticeAdyacente) : false;
 }
 
-template<class T> 
+template<class T>
 int Grafo<T>::ObtenerCantidadVertices() {
   return cantidadVertices;
 }
 
 //GeneradorGrafos(?)
-template<class T> 
+template<class T>
 Grafo* Grafo<T>::ObtenerGrafoComplementario(const Grafo* grafo) {
   std::string name;
   name.append("Grafo Complementario ");
@@ -136,7 +154,7 @@ Grafo* Grafo<T>::ObtenerGrafoComplementario(const Grafo* grafo) {
   return NULL;
 }
 
-template<class T> 
+template<class T>
 bool Grafo<T>::EsCompleto(const Grafo* grafo) {
   int cantidadComplementaria =  (cantidadVertices*(cantidadVertices-1))/2;
   int contadorAristas=0;
@@ -146,25 +164,25 @@ bool Grafo<T>::EsCompleto(const Grafo* grafo) {
   return contadorAristas == cantidadComplementaria;
 }
 
-template<class T> 
+template<class T>
 int Grafo<T>::ObtenerGrado(IRG::VertexId vertice) {
   IRG::Vertice *verticeActual = ObtenerVertice(vertice);
   int grado = verticeActual->adyacencias.size();
   return (tipo == IRG::NON_DIRECTED_GRAPH ? grado * 2 : grado);
 }
 
-template<class T> 
+template<class T>
 IRG::TipoGrafo Grafo<T>::ObtenerTipo() {
   return this->tipo;
 }
 
 //GeneradorGrafos
-template<class T> 
+template<class T>
 Grafo* Grafo<T>::ObtenerUnion(const Grafo* grafo1, const Grafo* grafo2) {
   ASSERT
 }
 
-template<class T> 
+template<class T>
 std::string Grafo<T>::ObtenerVertices() {
   std::string sucesionGrafica;
   for (int i=0; i<cantidadVertices; ++i) {
@@ -179,49 +197,49 @@ std::string Grafo<T>::ObtenerVertices() {
   return sucesionGrafica;
 }
 
-template<class T> 
+template<class T>
 std::string Grafo<T>::ObtenerAristas(const Grafo* grafo) {
   ASSERT
   return std::string("");
 }
 
-template<class T> 
+template<class T>
 int Grafo<T>::ObtenerAdyacencia(Grafo* grafo, int verticeOrigen, int indiceAdyacencia) {
   ASSERT
   return -1;
 }
 
-template<class T> 
+template<class T>
 void Grafo<T>::DestruirGrafo(Grafo* grafo) {
   ASSERT
 }
 
-template<class T> 
+template<class T>
 std::string Grafo<T>::ObtenerSucesionGrafica() {
   ASSERT
   return std::string("");
 }
 
-template<class T> 
+template<class T>
 bool Grafo<T>::ContieneAdyacencia(int verticeOrigen, int verticeAdyacente) {
   ASSERT
   return false;
 }
 
-template<class T> 
+template<class T>
 std::string Grafo<T>::ObtenerEtiqueta(int vertice) {
   ASSERT
   return std::string("");
 }
 
-template<class T> 
+template<class T>
 std::string Grafo<T>::ObtenerEtiquetaOClave(int verticeABuscar) {
   ASSERT
   return std::string("");
 
 }
 
-template<class T> 
+template<class T>
 bool Grafo<T>::ExisteVertice(IRG::VertexId vertice) {
   IRG::Vertice *v = ObtenerVertice(vertice);
   return v != NULL;
@@ -230,7 +248,7 @@ bool Grafo<T>::ExisteVertice(IRG::VertexId vertice) {
 
 //Funciones privadas:
 
-template<class T> 
+template<class T>
 IRG::Vertice* Grafo<T>::CrearVertice(IRG::Nodo* nuevoNodo, IRG::VertexId id) {
   IRG::Vertice* nuevoVertice = new IRG::Vertice;
   nuevoVertice->vertexId  = id;
@@ -239,7 +257,7 @@ IRG::Vertice* Grafo<T>::CrearVertice(IRG::Nodo* nuevoNodo, IRG::VertexId id) {
   return nuevoVertice;
 }
 
-template<class T> 
+template<class T>
 IRG::Vertice* Grafo<T>::ObtenerVertice(IRG::VertexId id) {
   int cantidadVertices = vertices.size();
   for (int verticeActual = 0; verticeActual<cantidadVertices; verticeActual++) {
@@ -250,7 +268,7 @@ IRG::Vertice* Grafo<T>::ObtenerVertice(IRG::VertexId id) {
   return NULL;
 }
 
-template<class T> 
+template<class T>
 bool Grafo<T>::Contiene(IRG::Vertice* vertice, IRG::VertexId verticeAdyacente) {
   if (vertice->adyacencias.empty()) return false;
   IRG::Adyacencias::const_iterator iterador = vertice->adyacencias.begin();
@@ -262,13 +280,13 @@ bool Grafo<T>::Contiene(IRG::Vertice* vertice, IRG::VertexId verticeAdyacente) {
   return contiene;
 }
 
-template<class T> 
+template<class T>
 IRG::Status Grafo<T>::AgregarEtiqueta(IRG::VertexId etiqueta) {
   ASSERT
   return IRG::Error;
 }
 
-template<class T> 
+template<class T>
 IRG::Status Grafo<T>::AgregarEtiqueta(IRG::VertexId verticeId, IRG::TipoEtiqueta etiquetado, std::string etiqueta) {
   ASSERT
   return IRG::Error;

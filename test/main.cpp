@@ -1,18 +1,22 @@
 #include "Grafos.h"
 
-struct Point{
-    int x;
-    int y;
-};
-
 int main() {
-    Point p;
-    p.x=25;
-    p.y=1;
+    
     std::string as = "Grafoa";
-    toha::Grafo<Point> g(p, "Grafo-a", NON_DIRECTED_GRAPH);
+    toha::Grafo<int> g(25, "Grafo-a", DIRECTED_GRAPH);
+    g.add(1);
+    g.add(2);
+    g.add(3);
+    g.add(4);
+    g.add(26);
+    g.add(27);
 
-    std::cout<< "name: " << g.getName() << std::endl;
+    g.connect(1,2);
+    g.connect(1,4);
+    g.connect(1,25);
+    g.connect(1,26);
+    g.connect(1,27);
 
+    g.showConnections();
     return 0;
 }

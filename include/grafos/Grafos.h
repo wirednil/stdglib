@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Types.h"
+#include "Node.h"
 
 #include <vector>
 #include <list>
@@ -22,14 +23,6 @@ const int DIRECTED_GRAPH = 1;
 const int NON_DIRECTED_GRAPH = 0;
 
 namespace toha {
-template <class T>
-struct Node {
-    T val; 
-    std::list<Node<T>*> adjacent; ///< A list of pointers to adjacent nodes.
-};
-
-template <class T>
-Node<T>* create_new_node(const T& val); 
 
 /**
  * @brief Define una clase grafo que puede ser: 
@@ -46,6 +39,7 @@ private:
   std::string name;
   const int type;
   std::vector< Node<T>* > vertices;
+
   Node<T>* search(const T& val);
 public:
   Grafo(const T& val);
@@ -53,6 +47,8 @@ public:
   int add(const T& value);
   
   void showVertices(); 
+
+  void showConnections();
   
   /**
    * @return nombre del grafo. 
@@ -73,22 +69,22 @@ public:
   
   /**
    * @brief Si es un grafo NON_DIRECTED_GRAPH, se agrega una relacion de adyacencia conmutativa entre
-   * verticeOrigen y verticeDestino (verticeOrigen es adyacente a verticeDestino y viceversa).  
-   * Si es un grafo Dirigido, se agrega una relacion de adyacencia de verticeOrigen y verticeDestino
-   * (verticeOrigen es adyacente a verticeDestino).
-   * Si verticeOrigen o verticeDestino no pertenece al grafo no realiza ninguna accion
+   * dest y verticeDestino (dest es adyacente a verticeDestino y viceversa).  
+   * Si es un grafo Dirigido, se agrega una relacion de adyacencia de dest y verticeDestino
+   * (dest es adyacente a verticeDestino).
+   * Si dest o verticeDestino no pertenece al grafo no realiza ninguna accion
    * 
-   * @param verticeOrigen
+   * @param dest
    * 
    * @param verticeDestino
    */
   int connect(const T &dest, const T &src);
   
   /**
-   * @return true si verticeOrigen es adyacente a verticeDestino.
+   * @return true si dest es adyacente a verticeDestino.
    * Caso contrario devuelve false
    */
-  // bool SonAdyacentes(VertexId verticeOrigen, VertexId verticeAdyacente);
+  // bool SonAdyacentes(VertexId dest, VertexId verticeAdyacente);
 
   /**
    * @return Devuelve la cantidad de vertices de grafo
@@ -144,7 +140,7 @@ public:
    */
   // std::string ObtenerAristas(const Grafo* grafo);
 
-  // int ObtenerAdyacencia(Grafo* grafo, int verticeOrigen, int indiceAdyacencia);
+  // int ObtenerAdyacencia(Grafo* grafo, int dest, int indiceAdyacencia);
 
   /**
    * Precondiciones: @grafo es una instancia valida creada con alguna de las primitivas creacionales
@@ -157,7 +153,7 @@ public:
    * Postcondiciones: Devuelve la sucesion grafica de @grafo separados por coma
    */
   // std::string ObtenerSucesionGrafica();
-  // bool ContieneAdyacencia(int verticeOrigen, int verticeAdyacente);
+  // bool ContieneAdyacencia(int dest, int verticeAdyacente);
   // std::string ObtenerEtiqueta(int vertice);
   // std::string ObtenerEtiquetaOClave(int verticeABuscar);
   // bool ExisteVertice(VertexId vertice);
