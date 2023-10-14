@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Verifica si los directorios ya existen antes de crearlos
+if [ ! -d "lib" ]; then
+    mkdir lib
+    echo "Directorio 'lib' creado."
+fi
+
+if [ ! -d "obj" ]; then
+    mkdir obj
+    echo "Directorio 'obj' creado."
+fi
+
+echo "Directorios 'obj', 'test', y 'lib' creados."
