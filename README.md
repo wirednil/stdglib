@@ -17,7 +17,7 @@ To use this library, follow the instructions below:
 ### Include the Library
 
 ```cpp
-#include "Grafo.h"
+#include "graph.hpp"
 ```
 
 ### Create a Graph
@@ -25,7 +25,7 @@ To use this library, follow the instructions below:
 You can create a graph object of your desired type (directed or non-directed) and specify a name for it:
 
 ```cpp
-toha::Grafo<int> myGraph(0, "MyGraphName", NON_DIRECTED_GRAPH);
+toha::graph<int> myGraph(0, "MyGraphName", NON_DIRECTED_GRAPH);
 ```
 
 ### Add Vertices

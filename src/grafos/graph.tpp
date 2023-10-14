@@ -1,108 +1,116 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <string>
+#pragma once
+#include <iostream>
+#include "Types.h"
 
-#include "toha.h"
+namespace toha {
 
-struct IRG::Vertice{
-  IRG::Nodo* nodo;
-  std::string etiqueta;
-  IRG::VertexId vertexId;
-  IRG::Adyacencias adyacencias;
-};
-
-stdgraph::Grafo::Grafo(std::string * nombre, IRG::TipoGrafo tipo) {
-  switch(tipo) {
-    case IRG::Dirigido:
-      CrearGrafoDirigido(nombre);
-      break;
-    case IRG::NoDirigido:
-      CrearGrafoNoDirigido(nombre);
-      break;
-    default:
-      fprintf(stderr,"Tipo de grafo no reconocido\n");
-      ASSERT
+template <class T>
+std::string getAdjacentNodeRepresentations(const T& node, std::list<Node<T>*> adjacent) {
+  std::string nodes = "";
+  for (Node<T>* n: adjacent) {
+    nodes += "(";
+    nodes += std::to_string(node);
+    nodes += ", ";
+    nodes += std::to_string(n->val);
+    nodes += ")";
+    if (n != adjacent.back()) nodes += ", ";
   }
+  return nodes;
 }
 
-void stdgraph::Grafo::CrearGrafoNoDirigido(std::string* nombre) {
-  this->nombre = nombre;
-  this->tipo = IRG::NoDirigido;
-  this->cantidadVertices = 0;
+template<class T>
+graph<T>::graph(const T& val)
+ { this->add(val); }
+
+template<class T>
+graph<T>::graph(const T& val, const std::string &name, const int &type) :
+  name(name), type(type) {
+  this->add(val);
 }
 
-void stdgraph::Grafo::CrearGrafoDirigido(std::string* nombre) {
-  this->nombre = nombre;
-  this->tipo = IRG::Dirigido;
-  this->cantidadVertices = 0;
+template<class T>
+int graph<T>::add(const T& value) {
+  this->vertices.push_back(new Node<T>(value));
+  return this->vertices.size() - 1;
 }
 
-IRG::Status stdgraph::Grafo::AgregarNodo(IRG::Nodo* nuevoNodo, IRG::VertexId id) {
-  if (nuevoNodo != NULL) {
-    this->vertices.push_back(CrearVertice(nuevoNodo,id));
-    cantidadVertices++;
-    return IRG::Ok;
-  }
-  return IRG::Error;
+template<class T>
+std::string graph<T>::getName() {
+  return this->name;
 }
 
-IRG::Nodo* stdgraph::Grafo::ObtenerNodo(IRG::VertexId id) {
-  int sizeVertex = vertices.size();
-  IRG::Vertice* verticeActual = ObtenerVertice(id);
-  return (verticeActual ? verticeActual->nodo : NULL);
+template<class T>
+void graph<T>::setName(std::string name) {
+  if (this->name.empty()) this->name = name;
 }
 
-std::string* stdgraph::Grafo::ObtenerNombre() {
-  return this->nombre;
-}
-
-void stdgraph::Grafo::EstablecerNombre(std::string* nombre) {
-  if (this->nombre==NULL) this->nombre = nombre;
-}
-
-std::string* stdgraph::Grafo::ObtenerIdentificador() {
-  ASSERT
-  return new std::string("");
-}	
-
-IRG::Status stdgraph::Grafo::Conectar(IRG::VertexId verticeOrigen, IRG::VertexId verticeDestino) {
-  IRG::Vertice* vOrigen  = ObtenerVertice(verticeOrigen);
-  IRG::Vertice* vDestino = ObtenerVertice(verticeDestino);
-  if (vOrigen!=NULL) {
-    if (vDestino!=NULL) {
-      if (!Contiene(vOrigen, verticeDestino)) {
-        vOrigen->adyacencias.push_back(verticeDestino);
-        if (EsNoDirigido() && !Contiene(vDestino, verticeOrigen)) {
-          vDestino->adyacencias.push_back(verticeOrigen);
-        }
-      }
-      return IRG::Ok;
-    }else{
-      logprint("No es posible encontrar el vertice destino: %d", verticeDestino);
-      return IRG::Error;
+template<class T>
+int graph<T>::connect(const T &dest, const T &src) {
+  Node<T>* destNode = this->search(dest);
+  Node<T>* srcNode  = this->search(src);
+  if (destNode && srcNode) {
+    destNode->connect(srcNode);
+    if (type == NON_DIRECTED_GRAPH) {
+      srcNode->connect(destNode);
     }
-  }else{
-    logprint("No es posible encontrar el vertice origen: %d", verticeOrigen);
-    return IRG::Error;
+    return toha::Ok;
   }
+  return toha::Error;
 }
 
-bool stdgraph::Grafo::SonAdyacentes(IRG::VertexId verticeOrigen, IRG::VertexId verticeAdyacente) {
+template <class T>
+Node<T>* graph<T>::search(const T& val) {
+  for (Node<T>* node : this->vertices) {
+    if (node->getValue() == val) return node;
+  }
+  return nullptr;
+}
+
+template<class T>
+void graph<T>::showVertices() {
+  std::string V = "V = {";
+  for (Node<T>* a : vertices) {
+    V.append(std::to_string(a->val));
+    if (a != vertices.back()) {
+      V.append(", ");
+    }
+  }
+  V.append("}");
+  std::cout << V << std::endl;
+}
+
+template<class T>
+void graph<T>::showConnections() {
+  std::string edges = "E = {";
+  for (Node<T>* node : vertices) {
+    std::string adjacentNodes = node->getAdjacentNodeRepresentations();
+    if (!adjacentNodes.empty()) {
+      edges.append(adjacentNodes);
+    }
+  }
+  edges.append("}");
+  std::cout << edges << std::endl;
+}
+/*
+
+template<class T>
+bool graph<T>::SonAdyacentes(IRG::VertexId verticeOrigen, IRG::VertexId verticeAdyacente) {
   IRG::Vertice* vOrigen = ObtenerVertice(verticeOrigen);
   return vOrigen ? Contiene(vOrigen, verticeAdyacente) : false;
 }
 
-int stdgraph::Grafo::ObtenerCantidadVertices() {
+template<class T>
+int graph<T>::ObtenerCantidadVertices() {
   return cantidadVertices;
 }
 
 //GeneradorGrafos(?)
-stdgraph::Grafo* stdgraph::Grafo::ObtenerGrafoComplementario(const Grafo* grafo) {
-  std::string* nombre = new std::string;
-  nombre->append("Grafo Complementario ");
-  nombre->append(*ObtenerNombre());
-  Grafo *grafoComplementario = new Grafo(nombre, ObtenerTipo());
+template<class T>
+graph* graph<T>::ObtenerGrafoComplementario(const graph* grafo) {
+  std::string name;
+  name.append("graph Complementario ");
+  name.append(ObtenerNombre());
+  graph* grafoComplementario = new graph(name, ObtenerTipo());
   for (int origen = 0; origen < cantidadVertices; origen++) {
     IRG::Adyacencias adyacencias = vertices[origen]->adyacencias;
     IRG::VertexId vertexId       = vertices[origen]->vertexId;
@@ -110,7 +118,8 @@ stdgraph::Grafo* stdgraph::Grafo::ObtenerGrafoComplementario(const Grafo* grafo)
   return NULL;
 }
 
-bool stdgraph::Grafo::EsCompleto(const Grafo* grafo) {
+template<class T>
+bool graph<T>::EsCompleto(const graph* grafo) {
   int cantidadComplementaria =  (cantidadVertices*(cantidadVertices-1))/2;
   int contadorAristas=0;
   for (int i=0; i<cantidadVertices; ++i) {
@@ -119,71 +128,65 @@ bool stdgraph::Grafo::EsCompleto(const Grafo* grafo) {
   return contadorAristas == cantidadComplementaria;
 }
 
-int stdgraph::Grafo::ObtenerGrado(IRG::VertexId vertice) {
+template<class T>
+int graph<T>::ObtenerGrado(IRG::VertexId vertice) {
   IRG::Vertice *verticeActual = ObtenerVertice(vertice);
   int grado = verticeActual->adyacencias.size();
-  return (tipo == IRG::NoDirigido ? grado * 2 : grado);
+  return (tipo == IRG::NON_DIRECTED_GRAPH ? grado * 2 : grado);
 }
 
-IRG::TipoGrafo stdgraph::Grafo::ObtenerTipo() {
+template<class T>
+IRG::TipoGrafo graph<T>::ObtenerTipo() {
   return this->tipo;
 }
 
 //GeneradorGrafos
-stdgraph::Grafo* stdgraph::Grafo::ObtenerUnion(const Grafo* grafo1, const Grafo* grafo2) {
+template<class T>
+graph* graph<T>::ObtenerUnion(const graph* grafo1, const graph* grafo2) {
   ASSERT
 }
 
-std::string* stdgraph::Grafo::ObtenerVertices() {
-  std::string* sucesionGrafica = new std::string;
+template<class T>
+std::string graph<T>::ObtenerVertices() {
+  std::string sucesionGrafica;
   for (int i=0; i<cantidadVertices; ++i) {
     IRG::Vertice *verticeActual = ObtenerVertice(this->vertices[i]->vertexId);
     if (verticeActual!=NULL && i==0) {
-      sucesionGrafica->append(verticeActual->etiqueta);
+      sucesionGrafica.append(verticeActual->etiqueta);
     } else {
-      sucesionGrafica->append(*sucesionGrafica);
-      sucesionGrafica->append(verticeActual->etiqueta);
+      sucesionGrafica.append(sucesionGrafica);
+      sucesionGrafica.append(verticeActual->etiqueta);
     }
   }
   return sucesionGrafica;
 }
 
-std::string* stdgraph::Grafo::ObtenerAristas(const Grafo* grafo) {
+template<class T>
+std::string graph<T>::ObtenerAristas(const graph* grafo) {
   ASSERT
-  return new std::string("");
+  return std::string("");
 }
 
-int stdgraph::Grafo::ObtenerAdyacencia(Grafo* grafo, int verticeOrigen, int indiceAdyacencia) {
+template<class T>
+int graph<T>::ObtenerAdyacencia(graph* grafo, int verticeOrigen, int indiceAdyacencia) {
   ASSERT
   return -1;
 }
 
-void stdgraph::Grafo::DestruirGrafo(Grafo* grafo) {
+template<class T>
+std::string graph<T>::ObtenerSucesionGrafica() {
   ASSERT
+  return std::string("");
 }
 
-std::string* stdgraph::Grafo::ObtenerSucesionGrafica() {
-  ASSERT
-  return new std::string("");
-}
-
-bool stdgraph::Grafo::ContieneAdyacencia(int verticeOrigen, int verticeAdyacente) {
+template<class T>
+bool graph<T>::ContieneAdyacencia(int verticeOrigen, int verticeAdyacente) {
   ASSERT
   return false;
 }
 
-std::string* stdgraph::Grafo::ObtenerEtiqueta(int vertice) {
-  ASSERT
-  return new std::string("");
-}
-
-std::string* stdgraph::Grafo::ObtenerEtiquetaOClave(int verticeABuscar) {
-  ASSERT
-  return new std::string("");
-
-}
-
-bool stdgraph::Grafo::ExisteVertice(IRG::VertexId vertice) {
+template<class T>
+bool graph<T>::ExisteVertice(IRG::VertexId vertice) {
   IRG::Vertice *v = ObtenerVertice(vertice);
   return v != NULL;
 }
@@ -191,7 +194,8 @@ bool stdgraph::Grafo::ExisteVertice(IRG::VertexId vertice) {
 
 //Funciones privadas:
 
-IRG::Vertice* stdgraph::Grafo::CrearVertice(IRG::Nodo* nuevoNodo, IRG::VertexId id) {
+template<class T>
+IRG::Vertice* graph<T>::CrearVertice(IRG::Nodo* nuevoNodo, IRG::VertexId id) {
   IRG::Vertice* nuevoVertice = new IRG::Vertice;
   nuevoVertice->vertexId  = id;
   nuevoVertice->nodo      = nuevoNodo;
@@ -199,7 +203,8 @@ IRG::Vertice* stdgraph::Grafo::CrearVertice(IRG::Nodo* nuevoNodo, IRG::VertexId 
   return nuevoVertice;
 }
 
-IRG::Vertice* stdgraph::Grafo::ObtenerVertice(IRG::VertexId id) {
+template<class T>
+IRG::Vertice* graph<T>::ObtenerVertice(IRG::VertexId id) {
   int cantidadVertices = vertices.size();
   for (int verticeActual = 0; verticeActual<cantidadVertices; verticeActual++) {
     if (vertices[verticeActual]->vertexId == id) {
@@ -209,7 +214,8 @@ IRG::Vertice* stdgraph::Grafo::ObtenerVertice(IRG::VertexId id) {
   return NULL;
 }
 
-bool stdgraph::Grafo::Contiene(IRG::Vertice* vertice, IRG::VertexId verticeAdyacente) {
+template<class T>
+bool graph<T>::Contiene(IRG::Vertice* vertice, IRG::VertexId verticeAdyacente) {
   if (vertice->adyacencias.empty()) return false;
   IRG::Adyacencias::const_iterator iterador = vertice->adyacencias.begin();
   bool contiene = false;
@@ -220,12 +226,16 @@ bool stdgraph::Grafo::Contiene(IRG::Vertice* vertice, IRG::VertexId verticeAdyac
   return contiene;
 }
 
-IRG::Status stdgraph::Grafo::AgregarEtiqueta(IRG::VertexId etiqueta) {
+template<class T>
+IRG::Status graph<T>::AgregarEtiqueta(IRG::VertexId etiqueta) {
   ASSERT
   return IRG::Error;
 }
 
-IRG::Status stdgraph::Grafo::AgregarEtiqueta(IRG::VertexId verticeId, IRG::TipoEtiqueta etiquetado, std::string* etiqueta) {
+template<class T>
+IRG::Status graph<T>::AgregarEtiqueta(IRG::VertexId verticeId, IRG::TipoEtiqueta etiquetado, std::string etiqueta) {
   ASSERT
   return IRG::Error;
+}
+*/
 }
