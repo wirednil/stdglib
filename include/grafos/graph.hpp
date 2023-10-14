@@ -38,6 +38,7 @@ class graph
 {
 private:
   std::string name;                 ///< The name of the graph.
+  std::string GUID;                 ///< Globally Unique Identifier
   const int type;                   ///< The type of the graph (DIRECTED_GRAPH or NON_DIRECTED_GRAPH).
   std::vector< Node<T>* > vertices; ///< Vector to store graph vertices.
 
@@ -236,11 +237,7 @@ public:
 
 
   //<! TODO: refactor  
-  /** 
-   * @return identificador unico global
-   */
-  // std::string ObtenerIdentificador();
-  
+ 
   /**
    * @return true si dest es adyacente a verticeDestino.
    * Caso contrario devuelve false

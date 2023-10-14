@@ -16,10 +16,12 @@ namespace toha
 	};
 
 	enum Status{
-		Ok 		=  1,
+		Ok 		=  0,
 		Error 	= -1
 	};
 
 }
+
+
 
 #endif /*_TYPES_H_*/
