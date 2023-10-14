@@ -1,0 +1,7 @@
+#directories
+.vscode/
+lib/
+obj/
+
+# Binaries
+main
