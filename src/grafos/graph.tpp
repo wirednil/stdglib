@@ -41,7 +41,7 @@ std::string graph<T>::getName() {
 
 template<class T>
 void graph<T>::setName(std::string name) {
-  if (this->name.empty()) this->name = name;
+  this->name = name;
 }
 
 template<class T>
