@@ -91,6 +91,11 @@ void graph<T>::showConnections() {
   edges.append("}");
   std::cout << edges << std::endl;
 }
+
+template<class T>
+size_t graph<T>::size() {
+  return vertices.size();
+}
 /*
 
 template<class T>

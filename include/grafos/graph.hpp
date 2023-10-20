@@ -180,7 +180,7 @@ public:
    *
    * @return The number of nodes in the graph.
    */
-  int size();
+  size_t size();
 
   /**
    * @brief Perform Depth-First Search (DFS) traversal on the graph starting from a given node.
