@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <algorithm>    // std::find
 #include "Types.h"
 
 namespace toha {
@@ -70,7 +71,7 @@ template<class T>
 void graph<T>::showVertices() {
   std::string V = "V = {";
   for (Node<T>* a : vertices) {
-    V.append(std::to_string(a->val));
+    V.append(std::to_string(a->getValue()));
     if (a != vertices.back()) {
       V.append(", ");
     }
@@ -95,6 +96,16 @@ void graph<T>::showConnections() {
 template<class T>
 size_t graph<T>::size() {
   return vertices.size();
+}
+
+template<class T>
+int graph<T>::removeNode(const T& node) {
+  if (!vertices.empty()) {
+    auto it = std::find(vertices.begin(), vertices.end(), 
+                  this->search(node));
+    vertices.erase(it);
+  }
+  return 0;
 }
 /*
 

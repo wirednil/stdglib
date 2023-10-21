@@ -23,6 +23,8 @@ public:
      */
     Node(const T& value);
 
+    ~Node();
+
     /**
      * @brief connect to another node.
      *

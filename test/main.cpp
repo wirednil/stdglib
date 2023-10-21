@@ -17,6 +17,10 @@ int main() {
     g.connect(1,26);
     g.connect(1,27);
 
-    g.showConnections();
+    g.showVertices();
+    
+    g.removeNode(4);
+    g.showVertices();
+    // g.showConnections();
     return 0;
 }

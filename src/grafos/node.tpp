@@ -6,6 +6,8 @@ namespace toha {
 template<class T>
 Node<T>::Node(const T& value) : value(value) {}
 
+template<class T>
+Node<T>::~Node() { }
 
 template<class T>
 void Node<T>::connect(Node<T>* node) {

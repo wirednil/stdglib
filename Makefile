@@ -12,7 +12,7 @@ OBJ_LIST	= 	$(OBJ_DIR)/Grafos.$(0)
 # Flags Compilers
 CXX			=	g++
 INCLUDES	=	-I$(INC_DIR) -I$(INC_DIR)/grafos -I$(INC_DIR)/industries
-FLAGS		=	-O0 -Wall -Wextra -g
+FLAGS		=	-O0 -Wall -Wextra -g -std=c++11
 
 
 # Rules to compile testing files
