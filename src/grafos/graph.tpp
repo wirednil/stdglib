@@ -107,6 +107,18 @@ int graph<T>::removeNode(const T& node) {
   }
   return 0;
 }
+
+/**
+ * @brief Remove an edge from the graph.
+ *
+ * @param srcNode The source node.
+ * @param destNode The destination node.
+ * @return Return code (Ok or Error) indicating the success of the operation.
+ */
+template<class T>
+int graph<T>::removeEdge(const T& srcNode, const T& destNode) {
+  
+}
 /*
 
 template<class T>
